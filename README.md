@@ -1,0 +1,167 @@
+[Gruppenfuehrer Fragen index.html](https://github.com/user-attachments/files/25848063/Gruppenfuehrer.Fragen.index.html)
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feuerwehr Quiz BW - Gruppenführer (Originalbegriffe)</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.5; padding: 15px; background: #f4f4f9; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .progress { font-size: 0.9em; color: #d32f2f; margin-bottom: 10px; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: #d32f2f; margin-top: 0; text-align: center; }
+        .question-text { font-weight: bold; margin-bottom: 20px; display: block; font-size: 1.1em; color: #000; }
+        .option { display: block; background: #fff; margin-bottom: 10px; padding: 12px 12px 12px 45px; border-radius: 8px; cursor: pointer; position: relative; border: 2px solid #e0e0e0; transition: all 0.2s; }
+        .option:hover { border-color: #d32f2f; background: #fff5f5; }
+        .option input { position: absolute; left: 15px; top: 15px; width: 20px; height: 20px; cursor: pointer; }
+        .selected { border-color: #d32f2f; background: #fff5f5; }
+        button { background: #d32f2f; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; margin-top: 15px; box-shadow: 0 3px 0 #b71c1c; }
+        #feedback { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; font-weight: bold; }
+        .correct { background: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; }
+        .wrong { background: #ffebee; color: #c62828; border: 2px solid #ef9a9a; }
+        #next-btn { background: #2e7d32; display: none; box-shadow: 0 3px 0 #1b5e20; }
+        .stats { text-align: center; padding: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="progress" class="progress">Frage 1 von 60</div>
+    <div id="quiz-box">
+        <h2>Gruppenführer BW</h2>
+        <div id="question-text" class="question-text"></div>
+        <div id="options-container"></div>
+        <button id="submit-btn" onclick="checkAnswer()">Antwort prüfen</button>
+        <div id="feedback"></div>
+        <button id="next-btn" onclick="nextQuestion()">Nächste Frage</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "1 Welche Aussagen sind richtig?", o: {a: "Die Feuerwehr ist eine gemeinnützige, der Nächstenhilfe dienende Einrichtung", b: "Die Feuerwehr ist ein gemeinnütziger Verein", c: "Die Feuerwehr ist ein Verein, ohne eigene Rechtspersönlichkeit", d: "Die Feuerwehr ist eine Einrichtung der Gemeinde"}, a: ["a", "d"] },
+        { q: "2 Welche Grundrechte können zur Erfüllung der Aufgaben der Feuerwehr nach § 2 des Feuerwehrgesetzes (FwG) Baden-Württemberg eingeschränkt werden?", o: {a: "Freiheit der Person", b: "Meinungsfreiheit / Pressefreiheit", c: "Gleichheit vor dem Gesetz", d: "Versammlungsfreiheit", e: "Unverletzlichkeit der Wohnung", f: "Recht auf Eigentum"}, a: ["a", "e", "f"] },
+        { q: "3 Welche Aufgabe hat der Feuerwehrausschuss (Abteilungsausschuss) entsprechend dem Feuerwehrgesetz (FwG) Baden-Württemberg und in welchen Zeitabständen ist er zu wählen?", o: {a: "Jahresabschlussübung vorbereiten", b: "Beratung des Kommandanten", c: "Beschaffung von Feuerwehrfahrzeugen", d: "Feuerwehrangehörige bei fortgesetzter Nachlässigkeit im Dienst entlassen", e: "Kommandant unterstützen", f: "Feuerwehrsatzung erstellen", g: "Drei Jahre", h: "Fünf Jahre"}, a: ["b", "e", "h"] },
+        { q: "4 Welche Aufgaben obliegen dem Land nach dem Feuerwehrgesetz Baden-Württemberg?", o: {a: "Förderung der Aus- und Fortbildung", b: "Errichtung und Unterhaltung einer Landesfeuerwehrschule", c: "Lohnfortzahlung an Arbeitnehmer bei Arbeitsunfähigkeit in Folge eines Feuerwehreinsatzes", d: "Angehörige der Feuerwehr gegen Haftpflicht versichern", e: "Gemeinden bei der Beschaffung von Ausrüstung unterstützen", f: "Förderung der Normung und Forschung", g: "Für jeden Landkreis mindestens einen Kreisbrandmeister nach Anhörung der Kommandanten bestellen"}, a: ["a", "b", "e", "f"] },
+        { q: "5 Welches sind die Dienstpflichten der ehrenamtlich tätigen Angehörigen der Gemeindefeuerwehr?", o: {a: "Am Dienst einschließlich der Aus- und Fortbildung regelmäßig und pünktlich teilnehmen", b: "Den dienstlichen Weisungen der Vorgesetzten nachkommen", c: "Sich im Dienst vorbildlich und kameradschaftlich verhalten", d: "Bei Alarm unverzüglich zur Einsatzstelle fahren", e: "Bei Alarm sich unverzüglich am Alarmplatz (Feuerwehrhaus) einzufinden", f: "Die technische Einsatzleitung übernehmen", g: "Hydrantenplan erstellen"}, a: ["a", "b", "c", "e"] },
+        { q: "6 Welche der Aussagen ist richtig?", o: {a: "Feuerwehrangehörige sind bei der der Alarmfahrt mit dem eigenen Pkw zum Feuerwehrgerätehaus berechtigt, die §§ 35 und 38 der StVO in Anspruch zu nehmen, sie müssen nur dauernd hupen", b: "Feuerwehrangehörige müssen bei der Fahrt mit ihrem Pkw zum Feuerwehrhaus, auch bei einem Alarm, die allgemeinen Regeln der StVO einhalten", c: "Ein Anwesenheitsnachweis beim Einsatz- und Übungsdienst gehört zu einem geregelten Dienstbetrieb der Feuerwehr", d: "Die Gemeindefeuerwehr muss jährlich einen Dienstplan erstellen, der den Umfang und die Inhalte des Ausbildungs- und Übungsdienstes verbindlich festlegt"}, a: ["b", "c", "d"] },
+        { q: "7 Wer entscheidet darüber, ob eine Katastrophe vorliegt?", o: {a: "Der Feuerwehr-Einsatzleiter (Technischer Einsatzleiter)", b: "Die Ortspolizeibehörde", c: "Die Katastrophenschutzbehörde", d: "Das Lagezentrum im Regierungspräsidium"}, a: ["c"] },
+        { q: "8 Welches sind die Katastrophenschutzbehörden nach dem Landeskatastrophenschutzgesetz?", o: {a: "Die Berufsfeuerwehr eine Gemeinde", b: "Landratsämter und Bürgermeister der Stadtkreise", c: "Die Landesregierung", d: "Die Regierungspräsidien", e: "Das Innenministerium"}, a: ["b", "d", "e"] },
+        { q: "9 Was versteht man unter dem Begriff „untere Explosionsgrenze“?", o: {a: "Die Temperatur, bei der eine Explosion frühestens möglich ist", b: "Die Explosion eines Gas-Luft-Gemisches unter Erdgleiche", c: "Der niedrigste Sauerstoffgehalt (%) in der Luft, bei dem eine Explosion möglich ist", d: "Die niedrigste Konzentration des brennbaren Stoffes im Gemisch von Gasen, Dämpfen, Nebeln und/oder Stäuben, in dem sich nach dem Zünden ein Brennen gerade nicht mehr selbstständig fortpflanzt kann"}, a: ["d"] },
+        { q: "10 Welche der aufgeführten Stoffe gehören zur Brandklasse A?", o: {a: "Acetylen", b: "Aceton", c: "Ammoniak", d: "Autoreifen", e: "Baumwolle", f: "Holz (Hobelspäne)", g: "Bienenwachs"}, a: ["d", "e", "f"] },
+        { q: "11 Bei welchem der aufgeführten Löschmittel ist der Stickeffekt als Hauptlöscheffekt zu betrachten?", o: {a: "Wasser als Sprühstrahl", b: "Kohlenstoffdioxid", c: "Pulver für Brandklasse B und C", d: "Pulver für Brandklasse A, B und CO", e: "Luftschaum mit 75facher Verschäumung"}, a: ["b", "e"] },
+        { q: "12 Bei welchen Einsätzen ist Wasser als Löschmittel nicht anzuwenden?", o: {a: "Schornsteinbrände", b: "bei Zersetzung von Düngemittel", c: "Metallbrände", d: "Heustockbrände", e: "Schwelbrände in Kellergeschossen", f: "Mineralölbrände"}, a: ["a", "c", "f"] },
+        { q: "13 Wodurch ist eine Kraft gekennzeichnet?", o: {a: "Größe der Kraft", b: "Geschwindigkeit der Kraft", c: "Richtung der Kraft", d: "Dauer der Kraftwirkung (Minuten / Sekunden)", e: "Angriffspunkt der Kraft"}, a: ["a", "c", "e"] },
+        { q: "14 Welche Höchstlast L kann bei der vorliegenden Seilführung mit einem Mehrzweckzug Z 16 (Zugkraft 16 kN) gehoben werden?", o: {a: "L = 1600 kg", b: "L = 3200 kg", c: "L = 4800 kg", d: "L = 6400 kg"}, a: ["b"] },
+        { q: "15 Für welchen Fahrbereich (km) oder Betrieb (h) fest eingebauter Aggregate muss der Kraftstoff bei Feuerwehrfahrzeugen mindestens ausreichend sein?", o: {a: "200 km oder 2 h", b: "300 km oder 3 h", c: "300 km oder 4 h", d: "400 km oder 4 h"}, a: ["c"] },
+        { q: "16 Welche Feuerwehrpumpen gehören nach Norm zu einem Löschgruppenfahrzeug LF 10?", o: {a: "FPN 10/750", b: "FPN 10/1000", c: "TUP 3-1,5", d: "TP 8/1"}, a: ["b"] },
+        { q: "17 Welchen Inhalt muss der eingebaute Löschwasserbehälter bei einem Löschgruppenfahrzeug LF 20 nach Norm mindestens haben?", o: {a: "800 Liter", b: "1200 Liter", c: "1600 Liter", d: "2500 Liter"}, a: ["c"] },
+        { q: "18 Wie reagiert ein Gruppenführer auf die Lagemeldung eines Angriffstrupps, wenn dieser meldet, er habe beim Vorgehen zur Brandbekämpfung in einem Raum Fässer mit brennbarer Flüssigkeit gefunden? Der Gruppenführer weist den Angriffstrupp an:", o: {a: "Die Fässer heraus zu tragen", b: "Die Gefahrensymbole zu beschreiben", c: "Den Zustand der Fässer zu beschreiben", d: "Die Fässer zu kühlen", e: "Die Fässer abzulöschen", f: "An den Fässern nicht vorbeigehen"}, a: ["b", "c", "f"] },
+        { q: "19 Wann ist an Brandstellen mit gefährlichen Konzentrationen von Kohlenstoffmonoxid CO zu rechnen?", o: {a: "Nach einer Explosion", b: "Bei Bränden in geschlossenen Räumen bei mangelnder Luftzufuhr", c: "Bei Schwelbränden der Brandklasse A", d: "Bei Bränden der Brandklasse C"}, a: ["b", "c"] },
+        { q: "20 Welche der aufgeführten Atemgifte wirken durch Reiz- und Ätzwirkung schädigend auf den Menschen?", o: {a: "Kohlenstoffdioxid", b: "Blausäure und Dämpfe von Methylalkohol", c: "Chlor und Säuredämpfe", d: "Nitrose Gase", e: "Stickstoff und Methan"}, a: ["c", "d"] },
+        { q: "21 In welchen der farblich gekennzeichneten Druckgasflaschen befinden sich brennbare Gase? In Klammer ( ) ältere Kennzeichnung.", o: {a: "Blaue Flaschen mit zwei weißen Kreisen auf der Flaschenschulter", b: "Kastanienbraune Flasche (gelb)", c: "Grüne Flasche", d: "Rote Flasche", e: "Graue Flasche", f: "Graue Flasche mit roter Gasflaschenschulter"}, a: ["b", "d", "f"] },
+        { q: "22 Eine Acetylengasflasche ist längere Zeit der Brandwärme ausgesetzt. Was müssen Sie beachten?", o: {a: "Eine weitere Erwärmung kann zu einem Druckgefäßzerknall führen", b: "Flasche muss aus geschützter Stellung fortlaufend gekühlt werden", c: "Nach dem Abkühlen kann sich die Flasche wieder von selbst erwärmen", d: "Flasche muss mindestens 24 Stunden nach Erreichen der normalen Temperatur an einem sicheren Ort gelagert und kontrolliert, notfalls weiterhin gekühlt werden", e: "Flasche kann nach dem Abkühlen zur weiteren Benutzung verwendet werden", f: "Flasche muss von der Feuerwehr gekennzeichnet und zum Füllwerk gebracht werden", g: "Flasche muss gekennzeichnet, an Füllwerk übergeben und von diesem überprüft werden"}, a: ["a", "b", "c", "d", "g"] },
+        { q: "23 Bei welcher Art der Wärmeübertragung wird kein Übertragungsmedium benötigt?", o: {a: "Wärmeströmung", b: "Wärmestrahlung", c: "Wärmeleitung"}, a: ["b"] },
+        { q: "24 Welche Treibmittel werden in Feuerlöschern verwendet und welche Arten von tragbaren Feuerlöschern gibt es?", o: {a: "Luft, Helium, Kohlenstoffdioxid", b: "Propan, Butan", c: "Flüssigkeitsbrandlöscher", d: "Aufladelöscher", e: "Dauerdrucklöscher", f: "Gaslöscher", g: "Giftlöscher", h: "Schlaglöscher", i: "Pulverlöscher"}, a: ["a", "d", "e", "f", "i"] },
+        { q: "25 Welche Löschmittel werden in tragbaren Feuerlöschern eingesetzt?", o: {a: "Wasser mit Zusätzen", b: "Graugussspäne", c: "D-Löschpulver", d: "Schaumlöschmittel", e: "BC-Löschpulver", f: "ABC-Löschpulver", g: "Kohlenstoffdioxid", h: "Feiner Sand", i: "Schweröl", j: "Wasser"}, a: ["a", "c", "d", "e", "f", "g", "j"] },
+        { q: "26 Welche Vorteile hat ein Trinkwasserleitungsnetz, das als Ringleitungssystem ausgelegt ist?", o: {a: "Es bilden sich in den Rohrleitungen weniger Ablagerungen", b: "Kurze Abschaltstrecken bei Rohrbruch", c: "Geringere Bau- und Unterhaltungskosten als bei einem Verästelungssystem", d: "Hydranten fließen von zwei Seiten Wasser zu"}, a: ["a", "b", "d"] },
+        { q: "27 Nach welcher Faustformel errechnet sich der Abstand (m) von Verstärkerpumpen?", o: {a: "Abstand = (Ausgangsdruck / Druckverlust) * 100", b: "Abstand = (Gesamtförderdruck / Druckverlust) * 100", c: "Abstand = (verfügbarer Druck / Druckverlust) * 100"}, a: ["c"] },
+        { q: "28 In welcher maximalen Entfernung von einem Hydranten kann ein Löschfahrzeug aufgestellt werden, ohne dass Gefahr besteht, den notwendigen Pumpeneingangsdruck zu unterschreiten? (Wasserdruck am Standrohr: 5,4 bar, Förderstrom Q = 800 Liter/Minute, Reibungsverlust 1,3 bar / 100 Meter, verfügbare Wassermenge am Standrohr: 1200 Liter / Minute)", o: {a: "250 Meter", b: "300 Meter", c: "320 Meter"}, a: ["b"] },
+        { q: "29 Wie viel Wasser (Liter/Minute) liefert ein Unterflurhydrant bei „normalem“ Druckverhältnis im Rohrleitungsnetz?", o: {a: "Nennweite (mm) der Anschlussleitung x 7-10", b: "Nennweite (mm) der Anschlussleitung x 12-15", c: "Nennweite (mm) der Anschlussleitung x 15-17"}, a: ["a"] },
+        { q: "30 Welche Aufgaben muss der Wachhabende im Feuersicherheitswachdienst vor Beginn einer Veranstaltung wahrnehmen?", o: {a: "Kontrolle der Rettungswege", b: "Einweisung der Sicherheitsposten", c: "Durchführung ordnungsdienstlicher Tätigkeiten", d: "Überprüfung der Alarmierungsmöglichkeiten"}, a: ["a", "b", "d"] },
+        { q: "31 Welcher Baustoffklasse und welcher bauaufsichtlichen Benennung (nach DIN 4102) müssen Dekorationsmaterialien in Versammlungsräumen mindestens entsprechen?", o: {a: "B1", b: "Normal entflammbar", c: "Schwer entflammbar", d: "F 30"}, a: ["a", "c"] },
+        { q: "32 Welche der nachfolgenden Bedingungen muss erfüllt sein, damit die Standsicherheit eines Gebäudes gewährleistet ist?", o: {a: "Brandverhütungsschau muss durchgeführt sein", b: "Brandausbreitung in baulichen Anlagen richtig abschätzen", c: "Am Gebäude wirkende Kräfte müssen im Gleichgewicht sein"}, a: ["c"] },
+        { q: "33 Welche baulichen Einrichtungen und Geräte können bei Gebäuden als Rettungsweg (Erster und zweiter Rettungsweg) angesehen werden?", o: {a: "Notwendige Treppen", b: "Tragbare Leitern", c: "Fluchthauben", d: "Aufzüge", e: "Drehleitern"}, a: ["a", "b", "e"] },
+        { q: "34 Welche bauaufsichtliche Benennung steht für die Feuerwiderstandsklasse F 30-B (nach DIN 4102) eines Bauteils?", o: {a: "Feuerbeständig", b: "Feuerhemmend", c: "Nicht brennbar", d: "Schwer entflammbar"}, a: ["b"] },
+        { q: "35 Welche der aufgeführten Tätigkeiten gehören zu den lebensrettenden Sofortmaßnahmen?", o: {a: "Verkehrssicherung, Verkehrsregelung", b: "Knochenbrüche schienen", c: "Wiederbelebung, Atemspende", d: "Lagerung und Schockbekämpfung", e: "Anschrift und Name des Verletzten notieren"}, a: ["c", "d"] },
+        { q: "36 Welche Maßnahmen müssen eventuell durchgeführt werden, um die Vitalfunktionen einer verletzten Person aufrechtzuerhalten und/oder wieder herzustellen?", o: {a: "Blutstillung", b: "Warmes Getränk verabreichen", c: "Injektion vorbereiten", d: "Lagerung", e: "Wärmeerhaltung", f: "Überwachung von Puls und Blutdruck", g: "Überwachung von Atmung und Bewusstseinslage", h: "Notruf veranlassen", i: "Verletzten über Unfallhergang befragen"}, a: ["a", "d", "e", "f", "g"] },
+        { q: "37 Welche Anzeigen deuten auf einen Schock hin?", o: {a: "Durstgefühl", b: "Starke Kopfschmerzen", c: "Frieren, Zittern", d: "Blasse, kalte und feuchte Haut", e: "Starke Blutungen", f: "Auffallende Unruhe", g: "Schneller und schwächer werdender Puls", h: "Tiefer Schlaf", i: "Auffallende Heiterkeit", j: "Großes Mitteilungsbedürfnis"}, a: ["c", "d", "e", "f", "g"] },
+        { q: "38 Welche Stelle auf der UTM-Karte wird durch die Koordinate 372378 bestimmt?", o: {a: "Stelle A", b: "Stelle B"}, a: ["a"] },
+        { q: "39 Was ist beim Retten von hilflosen Personen aus Schächten zu beachten?", o: {a: "Schacht mit Sauerstoff anreichern", b: "Retter mit Atemschutzgerät und Feuerwehrleine ausrüsten", c: "Person mit Feuerwehrleine oder Rettungsgurt sichern"}, a: ["b", "c"] },
+        { q: "40 Warum gibt es Feuerwehr-Einsatzpläne?", o: {a: "Damit sich der Bürgermeister über die Einsatzfähigkeit seiner Feuerwehr informieren kann", b: "Damit sich der Einsatzleiter bei der Anfahrt über eventuelle Gefahren und das mögliche Vorgehen informieren kann", c: "Damit der Kreisbrandmeister die Einsatzleitung übernehmen kann"}, a: ["b"] },
+        { q: "41 Kreuzen Sie die drei Tätigkeiten an, die der nach einem Alarm zuerst am Feuerwehrhaus eintreffende Feuerwehrangehörige vorrangig zu erledigen hat!", o: {a: "Fahrzeugmotor warm laufen lassen", b: "Seine Ausrüstung holen und überprüfen", c: "Mit der Leitstelle Verbindung aufnehmen", d: "Kreisbrandmeister verständigen", e: "Einsatzauftrag von der Leitstelle erfragen", f: "Einsatzauftrag der Leitstelle wiederholen und eventuell aufschreiben"}, a: ["c", "e", "f"] },
+        { q: "42 Wie fordern Sie als Gruppenführer in der Regel die Unterstützung anderer Feuerwehren oder Dienststellen bei einem Einsatz an?", o: {a: "Direkt über Telefon", b: "Nur über die Leistelle", c: "Direkt über Funk"}, a: ["b"] },
+        { q: "43 Welche Begriffe muss ein Befehl enthalten?", o: {a: "Einheit", b: "Lage", c: "Hydranten", d: "Auftrag", e: "Ort, Zeit, Wetter", f: "Mittel", g: "Ziel", h: "Weg", i: "Schadenstelle"}, a: ["a", "d", "f", "g", "h"] },
+        { q: "44 Wer entscheidet an der Einsatzstelle vorrangig über medizinische Maßnahmen am Verletzten?", o: {a: "Technischer Einsatzleiter", b: "Bürgermeister", c: "Betriebsleiter beziehungsweise Werksdirektor", d: "Notarzt", e: "Kommandant", f: "Sicherheitsbeauftragte"}, a: ["d"] },
+        { q: "45 Welche nachfolgenden Grundsätze sind im Sprechfunkverkehr zu beachten?", o: {a: "Höflichkeitsformeln unterlassen", b: "Personennamen und Amtsbezeichnungen dürfen nicht genannt werden", c: "Teilnehmer mit „Sie“ anreden", d: "Strenge Funkdisziplin einhalten", e: "Abkürzungen benutzen, damit Funkzeit kurz ist", f: "Eigennamen und schwer verständliche Worte buchstabieren", g: "Zahlen unverwechselbar aussprechen", h: "Deutlich und laut sprechen ohne Pausen"}, a: ["a", "c", "d", "f", "g"] },
+        { q: "46 Verkehrsarten sind von den technischen Möglichkeiten der Funkgeräte abhängige Verfahren des Nachrichtenaustausches im Sprechfunkverkehr. Wie werden sie unterschieden?", o: {a: "Wechselverkehr", b: "Richtungsverkehr", c: "Kreisverkehr", d: "Sternverkehr", e: "Gegenverkehr", f: "Bedingter Gegenverkehr", g: "Linienverkehr"}, a: ["a", "b", "e", "f"] },
+        { q: "47 Welche Aussage ist richtig?", o: {a: "„Einfach-Nachrichten“ werden in der Reihenfolge ihres Eingangs abgefertigt", b: "„Sofort-Nachrichten“ müssen in der Reihenfolge ihres Eingangs jedoch vor „Einfach-Nachrichten“ abgefertigt werden", c: "„Gespräche“ sollen stichwortartig vorgefertigt sein und von der Gegenstelle niedergeschrieben beziehungsweise aufgezeichnet werden", d: "Das „Gespräch“ ist ein formloser, unmittelbarer Informationsaustausch", e: "Der „Spruch“ ist eine formgebundene, schriftlich festgelegte Nachricht"}, a: ["a", "b", "d", "e"] },
+        { q: "48 Eine orangenfarbige Warntafel zeigt die Gefahrnummer 856. Was liegt vor?", o: {a: "Ätzender Stoff, brandfördernd und giftig", b: "Giftiger Stoff, brandfördernd und ätzend", c: "Oxidierend wirkender Stoff, giftig und ätzend"}, a: ["a"] },
+        { q: "49 Eine orangenfarbige Warntafel zeigt die Gefahrnummer X 423. Was liegt vor?", o: {a: "Entzündbarer fester Stoff, der mit Wasser gefährlich reagiert, wobei brennbare Gase entweichen", b: "Leicht entzündbare Flüssigkeit, mit Wasser gefährlich reagierend, dabei entweicht Gas", c: "Fester Stoff, leicht entzündbar, bei Berührung mit Wasser entweicht Gas"}, a: ["a"] },
+        { q: "50 Im „Hommel“ sehen Sie für einen Stoff im Gefahrendiamant im blauen Feld eine „3“.", o: {a: "Starke Reaktionsgefahr", b: "Vollschutzanzug erforderlich", c: "Sicherheitszone von mindestens 30 Meter bilden", d: "Stoff ist „schwer entflammbar“", e: "Gesundheitsgefahr"}, a: ["b", "e"] },
+        { q: "51 Eine Gaswolke (ätzende Gase) bildet sich im Freien aufgrund eines Lecks. Was tun Sie zuerst um die Bevölkerung zu schützen?", o: {a: "Räumung der unmittelbar beaufschlagten Gebäude", b: "Leck abdichten, damit nichts mehr austritt", c: "Gaswolke mit Wasser eingrenzen beziehungsweise niederschlagen"}, a: ["c"] },
+        { q: "52 Meldung Verkehrsunfall! Sie kommen mit einem Löschgruppenfahrzeug LF 10 und Ihrer Löschgruppe an die Einsatzstelle. Ihre Erkundung hat ergeben, dass keine Person im unmittelbaren Bereich gefährdet ist. Auf einem kleinen Lastkraftwagen (drei Tonnen) liegen zerstörte Behälter (60 Liter). Die Kennzeichnung der Behälter nach Gefahrstoff-Verordnung (GefStoffV) ist ätzend. Welche Maßnahmen veranlassen Sie?", o: {a: "Einsatzstelle großräumig (50 Meter) absichern", b: "Gase mit Sprühstrahl unter Atemschutz niederschlagen", c: "Lagemeldung abgeben und Gerätewagen Gefahrgut anfordern, Kreisbrandmeister verständigen", d: "Lagemeldung abgeben und Rüstwagen anfordern, Transportfirma verständigen und Ersatzfahrzeug anfordern", e: "Ausgelaufene Flüssigkeit mit viel Wasser (Verdünnungseffekt) ins Kanalrohr spülen"}, a: ["a", "b", "c"] },
+        { q: "53 Welches Gefährlichkeitsmerkmal kann einem Stoff zugeordnet werden?", o: {a: "Sehr giftig", b: "Ekelhaft riechend / spontan reagierend", c: "Brandfördernd", d: "Krebserzeugend", e: "Explosionsgefährlich"}, a: ["a", "c", "d", "e"] },
+        { q: "54 Woran erkennt man, ob ein unbekannter Stoff giftig ist?", o: {a: "Die Giftigkeit ist nicht ohne weiteres erkennbar", b: "Durch den Einsatz von Prüfröhrchen", c: "Mit Indikator-Papier (pH-Papier)"}, a: ["a"] },
+        { q: "55 Die Dekontamination durch die Feuerwehr (Dekon) ist die Grobreinigung von Einsatzkräften einschließlich ihrer Schutzkleidung, von anderen Personen sowie von Geräten. Welche Aussage ist richtig?", o: {a: "Der Dekon-Platz muss in spätestens 15 Minuten betriebsbereit sein", b: "Dekon-Stufe I = Notdekontamination von Personen", c: "Dekon-Stufe II = Standard-Dekontamination", d: "Dekon-Stufe III = Erweiterte Dekontamination im ABC-Einsatz", e: "Ein Dekon-Platz ist bei jedem ABC-Einsatz der Gefahrengruppe II und III einzurichten und abzugrenzen"}, a: ["a", "b", "c", "d", "e"] },
+        { q: "56 Was bedeutet die Abkürzung „TRGS“?", o: {a: "Technische Regeln für Gefahrstoffe", b: "Transport-Richtlinie für Gerätewagen-Säure", c: "Technisches Regelwerk für Gase und Säuren"}, a: ["a"] },
+        { q: "57 Welche Aussage für Erdgas ist richtig?", o: {a: "Erdgas ist leichter als Luft", b: "Erdgas ist gut riechbar", c: "Erdgas ist eingeatmet ein Blutgift"}, a: ["a"] },
+        { q: "58 Welche grundsätzlichen Schutzmaßnahmen sind beim Einsatz mit radioaktiven Stoffen zu beachten?", o: {a: "Abstand halten (groß)", b: "Aufenthaltsdauer kurz", c: "Abschirmung ausnutzen", d: "Kontamination vermeiden", e: "Inkorporation vermeiden", f: "Radioaktiver Stoff mit viel Wasser kühlen", g: "Radioaktiven Stoff aufnehmen"}, a: ["a", "b", "c", "d", "e"] },
+        { q: "59 Welcher Abstand ist bis zur Festlegung der Absperrgrenze für nicht unmittelbar am Einsatz beteiligte Einsatzkräfte bei Unfällen mit radioaktiven Stoffen vom Schadensobjekt einzuhalten?", o: {a: "10 Meter", b: "25 Meter", c: "50 Meter"}, a: ["c"] },
+        { q: "60 Bereiche mit ABC-Gefahrstoffen werden bei der Einsatzvorbereitung entsprechend den auszuführenden Maßnahmen in drei Gefahrengruppen eingeteilt. Welche Zuordnung ist richtig?", o: {a: "Gefahrengruppe I - Bereiche, in denen die Einsatzkräfte nur mit Sonderausrüstung und unter besonderer Überwachung und Dekontamination/Hygiene tätig werden dürfen", b: "Gefahrengruppe II - Bereiche, in denen die Einsatzkräfte ohne Sonderausrüstung tätig werden dürfen. Zur Vermeidung einer Inkorporation soll jedoch Atemschutz getragen werden", c: "Gefahrengruppe III - Bereiche, in denen Einsatzkräfte nur mit Sonderausrüstung und unter besonderer Überwachung und Dekontamination/Hygiene tätig werden dürfen und deren Eigenart die Anwesenheit einer fachkundigen Person notwendig macht, die während des Einsatzes die entstehende Gefährdung und die anzuwendenden Schutzmaßnahmen beurteilen kann"}, a: ["c"] }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const qData = questions[currentIdx];
+        document.getElementById("progress").innerText = `Frage ${currentIdx + 1} von ${questions.length}`;
+        document.getElementById("question-text").innerText = qData.q;
+        
+        const container = document.getElementById("options-container");
+        container.innerHTML = "";
+        
+        for (let key in qData.o) {
+            const label = document.createElement("label");
+            label.className = "option";
+            label.innerHTML = `<input type="checkbox" value="${key}"> ${key}) ${qData.o[key]}`;
+            label.onclick = function() { this.classList.toggle("selected"); };
+            container.appendChild(label);
+        }
+        
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("submit-btn").style.display = "block";
+        document.getElementById("next-btn").style.display = "none";
+    }
+
+    function checkAnswer() {
+        const qData = questions[currentIdx];
+        const selected = Array.from(document.querySelectorAll('input:checked')).map(i => i.value);
+        const correct = qData.a;
+        const isCorrect = selected.length === correct.length && selected.every(val => correct.includes(val));
+        
+        const fb = document.getElementById("feedback");
+        fb.style.display = "block";
+        if (isCorrect) {
+            fb.innerText = "Richtig!";
+            fb.className = "correct";
+            score++;
+        } else {
+            fb.innerText = `Falsch. Richtige Antwort(en): ${correct.join(", ")}`;
+            fb.className = "wrong";
+        }
+        document.getElementById("submit-btn").style.display = "none";
+        document.getElementById("next-btn").style.display = "block";
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < questions.length) loadQuestion(); else showResult();
+    }
+
+    function showResult() {
+        const container = document.querySelector(".container");
+        container.innerHTML = `
+            <div class="stats">
+                <h2>Ergebnis</h2>
+                <div style="font-size: 3em; color: #d32f2f;">${Math.round((score/questions.length)*100)}%</div>
+                <p>${score} von ${questions.length} Fragen richtig.</p>
+                <button onclick="location.reload()">Neu starten</button>
+            </div>`;
+    }
+
+    loadQuestion();
+</script>
+</body>
+</html>
